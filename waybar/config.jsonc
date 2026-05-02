@@ -48,7 +48,8 @@
     "custom/orbit": {
     "interval": 10,
     "on-click": "orbit toggle top-right",
-    "format": ""
+    "format": "",
+    "tooltip": false
 },
     "idle_inhibitor": {
         "format": "{icon}",

@@ -17,7 +17,7 @@ export TERMINFO="$HOME/.pixi/envs/default/share/terminfo"
 # ALIASES
 # ==============================================================================
 alias cat="bat"
-alias wr="pkill waybar || true; waybar -c $HOME/dotfiles/waybar/config.jsonc -s $HOME/dotfiles/waybar/style.css & disown"
+alias wr="pkill waybar > /dev/null 2>&1 || true; waybar -c $HOME/dotfiles/waybar/config.jsonc -s $HOME/dotfiles/waybar/style.css > /dev/null 2>&1 & disown"
 alias zu="SSH_CONNECTION=\"1 2 3 4\""
 alias zuc="unset SSH_CONNECTION "
 alias zz="source ~/.zshrc"
@@ -76,9 +76,6 @@ kural() {
 pxa() {
   export _OLD_PIXI_PATH="$PATH"
   eval "$(pixi shell-hook)"echo $XDG_DATA_DIRS
-
-~
-❯ 
 }
 
 pxd() {
@@ -231,7 +228,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # Autosuggestion configuration
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-ZSH_AUTOSUGGES66T_HIGHLIGHT_STYLE='fg=#99999'  # Dark grey with hex code
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#777777'  # Suggestion color set to #777777
 bindkey '^ ' autosuggest-accept              # Ctrl+Space to accept suggestion
 
 
