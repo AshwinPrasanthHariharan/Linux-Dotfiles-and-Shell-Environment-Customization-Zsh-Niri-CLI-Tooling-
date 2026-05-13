@@ -2,14 +2,33 @@
 // "/-" comments out the following node.
 // Check the wiki for a full description of the configuration:
 // https://yalter.github.io/niri/Configuration:-Introduction
-spawn-at-startup "swaybg" "-i" "/home/ashwin/Pictures/purple_night.png" "-m" "fill"
+spawn-at-startup "swaybg" "-i" "~/dotfiles/assets/wallpaper/purple_night.png" "-m" "fill"
 spawn-at-startup "orbit" "daemon"
 spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
 prefer-no-csd
-environment {
-    XCURSOR_THEME "Adwaita"
-    XCURSOR_SIZE "25"
-}
+
+spawn-sh-at-startup "if [ -x /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 ]; then /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1; elif [ -x /usr/lib/lxqt-policykit-agent/lxqt-policykit-agent ]; then /usr/lib/lxqt-policykit-agent/lxqt-policykit-agent; elif [ -x /usr/libexec/lxqt-policykit-agent ]; then /usr/libexec/lxqt-policykit-agent; elif [ -x /usr/lib/polkit-kde-authentication-agent-1 ]; then /usr/lib/polkit-kde-authentication-agent-1; elif [ -x /usr/lib/polkit-kde-agent-1 ]; then /usr/lib/polkit-kde-agent-1; elif [ -x /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 ]; then /usr/lib/mate-polkit/polkit-mate-authentication-agent-1; fi"
+spawn-sh-at-startup "wpctl set-volume -l 2.0 @DEFAULT_AUDIO_SINK@ 1.0"
+spawn-at-startup "waybar"
+spawn-at-startup "nwg-look" "-a"
+// spawn-at-startup "swww" "img" "~/Pictures/Background.gif"
+spawn-at-startup "cliphist" "wipe"
+
+// spawn-at-startup "swaybg" "-i" "~/Downloads/b227.jpg"
+
+spawn-at-startup "bash" "-c" "mkfifo -m 600 /tmp/wobpipe 2>/dev/null; tail -f /tmp/wobpipe | wob"
+
+spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
+spawn-at-startup "/home/ashwin/dotfiles/niri/resize_floater.sh"
+// spawn-at-startup "sherlock" "--daemonize"
+// spawn-at-startup "xwayland-satellite" ":0"
+
+// spawn-at-startup "swayidle" "-w" "timeout" "601" "niri msg action power-off-monitors" "timeout" "600" "swaylock -f" "before-sleep" "swaylock -f"
+
+spawn-at-startup "swayidle" "-w" "timeout" "570" "swaylock -f --grace 30" "timeout" "601" "niri msg action power-off-monitors" "resume" "niri msg action power-on-monitors" "before-sleep" "swaylock -f"
+
+// To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
+// spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
 // Input device configuration.
 // Find the full list of options on the wiki:
@@ -246,28 +265,6 @@ layout {
 // See the binds section below for more spawn examples.
 
 // Start a PolicyKit auth agent, nm-tray, and waybar.
-spawn-sh-at-startup "if [ -x /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 ]; then /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1; elif [ -x /usr/lib/lxqt-policykit-agent/lxqt-policykit-agent ]; then /usr/lib/lxqt-policykit-agent/lxqt-policykit-agent; elif [ -x /usr/libexec/lxqt-policykit-agent ]; then /usr/libexec/lxqt-policykit-agent; elif [ -x /usr/lib/polkit-kde-authentication-agent-1 ]; then /usr/lib/polkit-kde-authentication-agent-1; elif [ -x /usr/lib/polkit-kde-agent-1 ]; then /usr/lib/polkit-kde-agent-1; elif [ -x /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 ]; then /usr/lib/mate-polkit/polkit-mate-authentication-agent-1; fi"
-spawn-sh-at-startup "wpctl set-volume -l 2.0 @DEFAULT_AUDIO_SINK@ 2.0"
-spawn-at-startup "waybar"
-spawn-at-startup "nwg-look" "-a"
-// spawn-at-startup "swww" "img" "~/Pictures/Background.gif"
-spawn-at-startup "cliphist" "wipe"
-
-// spawn-at-startup "swaybg" "-i" "~/Downloads/b227.jpg"
-
-spawn-at-startup "bash" "-c" "mkfifo -m 600 /tmp/wobpipe 2>/dev/null; tail -f /tmp/wobpipe | wob"
-
-spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-spawn-at-startup "/home/ashwin/dotfiles/niri/resize_floater.sh"
-// spawn-at-startup "sherlock" "--daemonize"
-// spawn-at-startup "xwayland-satellite" ":0"
-
-// spawn-at-startup "swayidle" "-w" "timeout" "601" "niri msg action power-off-monitors" "timeout" "600" "swaylock -f" "before-sleep" "swaylock -f"
-
-spawn-at-startup "swayidle" "-w" "timeout" "570" "swaylock -f --grace 30" "timeout" "601" "niri msg action power-off-monitors" "resume" "niri msg action power-on-monitors" "before-sleep" "swaylock -f"
-
-// To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
-// spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
 hotkey-overlay {
 }

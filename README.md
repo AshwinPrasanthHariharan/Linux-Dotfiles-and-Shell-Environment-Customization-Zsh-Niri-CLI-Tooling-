@@ -25,7 +25,7 @@ Run the installation script:
 ```
 
 This script will:
-- Detect your package manager (apt, dnf, pacman, or brew)
+- Detect your package manager (apt, dnf, pacman, xbps, or brew)
 - Install required dependencies (zsh, git, curl, Rust, zoxide, bat, eza)
 - Backup your existing `.zshrc` (if any)
 - Symlink the new `.zshrc` to your home directory
@@ -47,6 +47,10 @@ If the automatic script fails:
 
    # Arch Linux
    sudo pacman -S zsh
+   chsh -s $(which zsh)
+
+   # Void Linux
+   sudo xbps-install -y zsh
    chsh -s $(which zsh)
 
    # macOS
@@ -78,6 +82,42 @@ If the automatic script fails:
 - **Fonts**: For proper icon display, install a Nerd Font (e.g., FiraCode Nerd Font)
 - **VS Code**: The `code.` alias requires VS Code to be installed with `code` in PATH
 - **Pixi**: Python environment detection works with Pixi (https://pixi.sh/)
+
+## Niri (Wayland Compositor)
+
+The installation script includes optional support for installing and configuring **Niri**, a scrollable-tiling Wayland compositor.
+
+### Installing Niri
+
+The script will prompt you to install niri during installation. It supports:
+- **Void Linux** (xbps): `xbps-install niri`
+- **Arch Linux** (AUR): Install via `yay -S niri`
+- **Other distros**: Manual installation from https://github.com/YaLTeR/niri
+
+### Niri Configuration
+
+When you choose to install niri, the script will:
+1. Symlink `niri/config.kdl` to `~/.config/niri/config.kdl`
+2. Set up startup scripts in your niri configuration
+3. Configure spawn-at-startup entries for swaybg and orbit daemon
+
+To manually configure niri after installation:
+```bash
+# Edit niri configuration
+$EDITOR ~/.config/niri/config.kdl
+
+# Reload niri configuration
+niri msg action reload-config
+```
+
+### Starting Niri
+
+To start a niri session:
+```bash
+niri
+```
+
+For more information, visit the [Niri documentation](https://yalter.github.io/niri/)
 
 ## Customization
 

@@ -32,6 +32,8 @@ detect_package_manager() {
         echo "dnf"
     elif command -v pacman >/dev/null 2>&1; then
         echo "pacman"
+    elif command -v xbps-install >/dev/null 2>&1; then
+        echo "xbps"
     elif command -v brew >/dev/null 2>&1; then
         echo "brew"
     else
@@ -93,6 +95,22 @@ install_packages() {
             cargo install zoxide bat eza
             ;;
 
+        xbps)
+            sudo xbps-install -Suv
+            sudo xbps-install -y zsh git curl wget base-devel
+
+            # Install Rust if not present
+            if ! command -v cargo >/dev/null 2>&1; then
+                log_info "Installing Rust..."
+                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+                source "$HOME/.cargo/env"
+            fi
+
+            # Install tools via cargo
+            log_info "Installing zoxide, bat, and eza via cargo..."
+            cargo install zoxide bat eza
+            ;;
+
         brew)
             brew install zsh git curl wget rustup-init
 
@@ -146,6 +164,97 @@ change_shell() {
     fi
 }
 
+# Function to install niri based on package manager
+install_niri() {
+    local pm=$1
+
+    log_info "Installing niri using $pm..."
+
+    case $pm in
+        apt)
+            # Add niri PPA or install from repos if available
+            if ! command -v niri >/dev/null 2>&1; then
+                log_warn "niri not available in default repos. Please install manually from https://github.com/YaLTeR/niri"
+                return 0
+            fi
+            ;;
+
+        dnf)
+            if ! command -v niri >/dev/null 2>&1; then
+                log_warn "niri not available in default repos. Please install manually from https://github.com/YaLTeR/niri"
+                return 0
+            fi
+            ;;
+
+        pacman)
+            # Check if niri is already available
+            if ! command -v niri >/dev/null 2>&1; then
+                log_info "Installing niri from AUR using yay..."
+                if command -v yay >/dev/null 2>&1; then
+                    yay -S niri --noconfirm
+                else
+                    log_warn "yay not found. Please install niri manually from AUR"
+                    return 0
+                fi
+            fi
+            ;;
+
+        xbps)
+            # Void Linux package
+            if ! command -v niri >/dev/null 2>&1; then
+                sudo xbps-install -y niri
+            fi
+            ;;
+
+        brew)
+            # macOS
+            if ! command -v niri >/dev/null 2>&1; then
+                log_warn "niri not available via Homebrew. Please install manually from https://github.com/YaLTeR/niri"
+                return 0
+            fi
+            ;;
+    esac
+
+    log_info "niri is installed"
+}
+
+# Function to configure niri
+configure_niri() {
+    local dotfiles_dir
+    local niri_config_dir
+    dotfiles_dir=$(pwd)
+    niri_config_dir="$HOME/.config/niri"
+
+    if [ ! -d "$niri_config_dir" ]; then
+        mkdir -p "$niri_config_dir"
+        log_info "Created $niri_config_dir"
+    fi
+
+    # Backup existing config if it exists
+    if [ -f "$niri_config_dir/config.kdl" ]; then
+        local backup_file="$niri_config_dir/config.kdl.backup.$(date +%Y%m%d_%H%M%S)"
+        mv "$niri_config_dir/config.kdl" "$backup_file"
+        log_info "Backed up existing niri config to $backup_file"
+    fi
+
+    # Symlink config
+    ln -sf "$dotfiles_dir/niri/config.kdl" "$niri_config_dir/config.kdl"
+    log_info "Symlinked niri config.kdl from $dotfiles_dir/niri/config.kdl"
+}
+
+# Function to setup niri startup scripts
+setup_niri_startup() {
+    local dotfiles_dir
+    dotfiles_dir=$(pwd)
+
+    if [ -f "$dotfiles_dir/niri/install.sh" ]; then
+        log_info "Setting up niri startup scripts..."
+        bash "$dotfiles_dir/niri/install.sh"
+    else
+        log_warn "niri/install.sh not found, skipping startup setup"
+    fi
+}
+
 # Main installation function
 main() {
     log_info "Starting dotfiles installation..."
@@ -176,9 +285,30 @@ main() {
     # Change shell
     change_shell
 
+    # Ask user if they want to install niri
+    read -p "Do you want to install and configure niri (Wayland compositor)? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if command -v niri >/dev/null 2>&1; then
+            configure_niri
+            setup_niri_startup
+        else
+            install_niri "$pm"
+            if command -v niri >/dev/null 2>&1; then
+                configure_niri
+                setup_niri_startup
+            else
+                log_error "niri installation failed. Please install manually from https://github.com/YaLTeR/niri"
+            fi
+        fi
+    fi
+
     log_info "Installation complete!"
     log_info "Run 'source ~/.zshrc' or restart your terminal to apply changes."
     log_info "You may need to install a Nerd Font for proper icon display in the terminal."
+    if command -v niri >/dev/null 2>&1; then
+        log_info "To start niri, run: niri"
+    fi
 }
 
 # Run main function
