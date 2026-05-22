@@ -13,7 +13,7 @@
     </child>
     <child>
       <object class="GtkMenuItem" id="suspend">
-        <property name="label">Suspend</property>
+        <property name="label">Suspend -h</property>
       </object>
     </child>
     <child>

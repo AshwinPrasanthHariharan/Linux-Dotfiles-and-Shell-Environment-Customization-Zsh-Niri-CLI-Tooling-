@@ -16,6 +16,7 @@ export TERMINFO="$HOME/.pixi/envs/default/share/terminfo"
 # ==============================================================================
 # ALIASES
 # ==============================================================================
+alias src="source"
 alias cat="bat"
 alias wr="pkill waybar > /dev/null 2>&1 || true; waybar -c $HOME/dotfiles/waybar/config.jsonc -s $HOME/dotfiles/waybar/style.css > /dev/null 2>&1 & disown"
 alias zu="SSH_CONNECTION=\"1 2 3 4\""

@@ -23,7 +23,7 @@
 
 window {
     location:   center;
-    width:      600;
+    width:      600px;
 
     background-color:   @bg0;
     border:             1px;
@@ -46,9 +46,14 @@ prompt {
     font: "FiraCode Nerd Font Medium 15";
 }
 
+entry {
+    text-color: @fg0;
+}
+
 textbox {
     padding:            10px 12px;
     background-color:   @bg1;
+    text-color:         @fg0;
 }
 
 listview {
@@ -57,33 +62,46 @@ listview {
     columns:    1;
 
     fixed-height:   false;
+    background-color: @bg0;
+}
+
+mainbox {
+    background-color:   @bg0;
 }
 
 element {
     padding:    8px 10px;
     spacing:    10px;
+    background-color: transparent;
 }
 
+/* Normal State Fixes */
 element normal normal {
-    text-color: @fg0;
+    background-color:   @bg0;
 }
 
 element normal urgent {
-    text-color: @urgent-color;
+    background-color:   @bg0;
 }
 
 element normal active {
-    text-color: @accent-color;
+    background-color:   @bg0;
+}
+
+/* Alternate State Fixes (Prevents the cream-colored background bars) */
+element alternate normal {
+    background-color:   @bg0;
+}
+
+element alternate urgent {
+    background-color:   @bg0;
 }
 
 element alternate active {
-    text-color: @accent-color;
+    background-color:   @bg0;
 }
 
-element selected {
-    text-color: @bg0;
-}
-
+/* Selected States */
 element selected normal, element selected active {
     background-color:   @accent-color;
 }
@@ -92,14 +110,22 @@ element selected urgent {
     background-color:   @urgent-color;
 }
 
+/* Sub-element Graphic & Text Overrides */
 element-icon {
-    size:   1.05em;
+    size:               1.05em;
+    background-color:   transparent;
 }
 
 element-text {
-    text-color: inherit;
+    background-color:   transparent;
+    text-color:         @fg0;
 }
 
-listview, mainbox {
-    background-color:   @bg0;
+/* Ensures text turns dark when highlighted on the purple background */
+element-text selected normal, element-text selected active {
+    text-color:         @bg0;
+}
+
+element-text selected urgent {
+    text-color:         @bg0;
 }

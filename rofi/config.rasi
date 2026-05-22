@@ -1,31 +1,57 @@
-/* Rofi configuration for Everforest theme */
+/**
+ * Rofi Configuration
+ * Theme: Everforest Remodeled
+ */
 
 configuration {
-    modi: "run,drun,window,ssh";
-    font: "JetBrains Mono 12";
-    show-icons: true;
-    icon-theme: "Papirus-Dark";
-    drun-display-format: "{icon} {name}";
-    window-format: "{w} · {c} · {t}";
-    
-    /* Layout and appearance */
-    display-drun: "Apps";
-    display-run: "Run";
-    display-window: "Windows";
-    display-ssh: "SSH";
-    
-    width: 50%;
-    lines: 15;
-    columns: 1;
-    
-    /* Behavior */
-    click-to-exit: true;
-    matching: "fuzzy";
-    tokenize: true;
-    
-    /* Theme */
-    theme: "squared-everforest";
+    /* Modes and Plugins */
+    modi:                       "drun,run,window,ssh";
+    show-icons:                 true;
+    icon-theme:                 "Papirus-Dark";
+
+    /* Display Formats */
+    drun-display-format:        "{icon} {name}";
+    window-format:              "{w} · {c} · {t}";
+
+    /* Element Labels */
+    display-drun:               "Apps";
+    display-run:                "Run";
+    display-window:             "Windows";
+    display-ssh:                "SSH";
+
+    /* Logic and Matching */
+    matching:                   "fuzzy";
+    tokenize:                   true;
+    click-to-exit:              true;
 }
 
-/* Import the theme */
-@import "squared-everforest.rasi"
+/* Global Typography & Import */
+* {
+    font: "JetBrains Mono 12";
+}
+@import "squared-everforest"
+
+/* Remodeled Layout Elements */
+window {
+    width:                      50%;
+    transparency:               "real";
+    cursor:                     "default";
+}
+
+mainbox {
+    children:                   [ inputbar, listview ];
+}
+
+listview {
+    lines:                      15;
+    columns:                    1;
+    fixed-height:               true;
+    dynamic:                    true;
+    cycle:                      true;
+    scrollbar:                  false;
+    cursor:                     "default";
+}
+
+element {
+    cursor:                     "pointer";
+}
