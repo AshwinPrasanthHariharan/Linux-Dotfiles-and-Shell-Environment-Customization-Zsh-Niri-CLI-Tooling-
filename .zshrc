@@ -1,3 +1,7 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/home/ashwin/.zsh/completions:"* ]];
+    then export FPATH="/home/ashwin/.zsh/completions:$FPATH";
+fi
 # Zsh configuration
 
 # ==============================================================================
@@ -5,30 +9,24 @@
 # ==============================================================================
 eval "$(zoxide init zsh)"
 setopt interactivecomments
+src=(
+  "$HOME/dotfiles/zsh/alias.sh"
+  "$HOME/dotfiles/zsh/func.sh"
+  "$HOME/dotfiles/zsh/prompt.zsh"
+  "$HOME/dotfiles/zsh/plugins.zsh"
+)
 
-if [[ -f "$HOME/dotfiles/zsh/alias.sh" ]]; then
-  source "$HOME/dotfiles/zsh/alias.sh"
-fi
+src_if_exists() {
+    [[ -r "$1" ]] && source "$1"
+}
 
-
-if [[ -f "$HOME/dotfiles/zsh/func.sh" ]]; then
-  source "$HOME/dotfiles/zsh/func.sh"
-fi
-
-if [[ -f "$HOME/dotfiles/zsh/prompt.zsh" ]]; then
-  source "$HOME/dotfiles/zsh/prompt.zsh"
-fi
-
-
-if [[ -f "$HOME/dotfiles/zsh/plugins.zsh" ]]; then
-  source "$HOME/dotfiles/zsh/plugins.zsh"
-fi
-
+for file in "${src[@]}"; do
+    src_if_exists "$file"
+done 
 
 # ==============================================================================
 # ENVIRONMENT
 # ==============================================================================
-export PATH="$HOME/.cargo/bin:$PATH"
 export TERM=xterm
 export TERMINFO="$HOME/.pixi/envs/default/share/terminfo"
 
@@ -41,18 +39,10 @@ export VISUAL=nvim
 # ==============================================================================
 # PATHS
 # ==============================================================================
-export PATH="$HOME/.pixi/bin:$PATH"
-
-# ==============================================================================
-# LOCAL EXTRAS
-# ==============================================================================
-if [[ -f "$HOME/dotfiles/cmd.sh" ]]; then
-  source "$HOME/dotfiles/cmd.sh"
-fi
-
-if [[ -f "$HOME/dotfiles/HS202rc" ]]; then
-  source "$HOME/dotfiles/HS202rc"
-fi
-
-
-. "$HOME/.local/bin/env"
+path+=(
+    "$HOME/.pixi/bin"
+    "$HOME/.local/bin"
+    "$HOME/.cargo/bin"
+    "/usr/local/bin"
+    "/usr/bin"
+)

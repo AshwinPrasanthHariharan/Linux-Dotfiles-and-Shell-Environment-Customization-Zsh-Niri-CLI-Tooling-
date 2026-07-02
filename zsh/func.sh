@@ -1,3 +1,9 @@
+# ==============================================================================
+# PATHS
+# ==============================================================================
+export PATH="$HOME/.pixi/bin:$PATH"
+export PATH="/usr/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # ==============================================================================
 # FUNCTIONS
@@ -58,8 +64,19 @@ mkagent() {
 }
 
 git-to-ssh() {
+    local git_bin
     local current_url
-    current_url=$(git remote get-url origin 2>/dev/null)
+  if ! command -v git >/dev/null 2>&1; then
+    echo "Error: git is not installed or not in PATH."
+    return 127
+  fi
+
+  git_bin=$(command -v git)
+
+  if ! current_url=$("$git_bin" remote get-url origin 2>/dev/null); then
+    echo "Error: Not a git repository or no 'origin' remote found."
+    return 1
+  fi
 
     if [ -z "$current_url" ]; then
         echo "Error: Not a git repository or no 'origin' remote found."
@@ -86,7 +103,10 @@ git-to-ssh() {
         local new_url="git@${domain}:${path}"
 
         # Apply the new URL
-        git remote set-url origin "$new_url"
+        if ! "$git_bin" remote set-url origin "$new_url"; then
+          echo "Error: Failed to update origin to SSH."
+          return 1
+        fi
         echo "Successfully swapped origin to SSH!"
         echo "Old: $current_url"
         echo "New: $new_url"
